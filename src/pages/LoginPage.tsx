@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Logo } from '@/components/ui/Logo';
+import { AnimatedIcon } from '@/components/ui/AnimatedIcon';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 
@@ -96,6 +97,9 @@ export default function LoginPage() {
           className="space-y-8"
         >
           <div className="text-center">
+            <div className="flex justify-center mb-4">
+              <AnimatedIcon icon="conecte" size="xl" />
+            </div>
             <h1 className="text-3xl font-display font-bold mb-2">
               Bem-vindo de volta!
             </h1>

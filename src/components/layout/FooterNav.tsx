@@ -1,13 +1,13 @@
 import { motion } from 'framer-motion';
-import { Home, Search, User, Settings } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { AnimatedIcon, IconType } from '@/components/ui/AnimatedIcon';
 
-const navItems = [
-  { icon: Home, label: 'Início', path: '/home' },
-  { icon: Search, label: 'Explorar', path: '/explore' },
-  { icon: User, label: 'Perfil', path: '/profile' },
-  { icon: Settings, label: 'Definições', path: '/settings' },
+const navItems: { icon: IconType; label: string; path: string }[] = [
+  { icon: 'ideia', label: 'Início', path: '/home' },
+  { icon: 'conecte', label: 'Explorar', path: '/explore' },
+  { icon: 'utilizador', label: 'Perfil', path: '/profile' },
+  { icon: 'conta', label: 'Definições', path: '/settings' },
 ];
 
 export function FooterNav() {
@@ -47,10 +47,14 @@ export function FooterNav() {
                 whileTap={{ scale: 0.9 }}
                 className="relative"
               >
-                <item.icon className={cn(
-                  'w-6 h-6 transition-all duration-300',
-                  isActive && 'scale-110'
-                )} />
+                <AnimatedIcon 
+                  icon={item.icon} 
+                  size="sm"
+                  className={cn(
+                    'transition-all duration-300',
+                    isActive && 'scale-110'
+                  )}
+                />
                 
                 {/* Glow effect when active */}
                 {isActive && (

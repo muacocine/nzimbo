@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Search, Filter, Star, Code, Palette, GraduationCap, TrendingUp, PenTool, Video, Briefcase, MoreHorizontal } from 'lucide-react';
+import { Search, Star, Code, Palette, GraduationCap, TrendingUp, PenTool, Video, Briefcase, MoreHorizontal } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { AnimatedIcon } from '@/components/ui/AnimatedIcon';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -77,9 +78,12 @@ export default function ExplorePage() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-6"
         >
-          <h1 className="text-2xl font-display font-bold text-foreground mb-2">
-            Explorar
-          </h1>
+          <div className="flex items-center gap-3 mb-2">
+            <AnimatedIcon icon="conecte" size="md" />
+            <h1 className="text-2xl font-display font-bold text-foreground">
+              Explorar
+            </h1>
+          </div>
           <p className="text-muted-foreground">
             Encontre freelancers por categoria
           </p>
@@ -108,7 +112,10 @@ export default function ExplorePage() {
           transition={{ delay: 0.2 }}
           className="mb-8"
         >
-          <h2 className="text-lg font-display font-semibold mb-4">Categorias</h2>
+          <div className="flex items-center gap-2 mb-4">
+            <AnimatedIcon icon="cracha" size="sm" />
+            <h2 className="text-lg font-display font-semibold">Categorias</h2>
+          </div>
           
           <div className="flex gap-3 overflow-x-auto no-scrollbar pb-4">
             <button
@@ -150,7 +157,10 @@ export default function ExplorePage() {
           transition={{ delay: 0.3 }}
         >
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-display font-semibold">Freelancers</h2>
+            <div className="flex items-center gap-2">
+              <AnimatedIcon icon="utilizador" size="sm" />
+              <h2 className="text-lg font-display font-semibold">Freelancers</h2>
+            </div>
             <span className="text-sm text-muted-foreground">
               {filteredFreelancers.length} encontrados
             </span>
@@ -222,8 +232,8 @@ export default function ExplorePage() {
               animate={{ opacity: 1, scale: 1 }}
               className="text-center py-12"
             >
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-secondary flex items-center justify-center">
-                <Search className="w-8 h-8 text-muted-foreground" />
+              <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-secondary flex items-center justify-center">
+                <AnimatedIcon icon="conecte" size="lg" />
               </div>
               <h3 className="font-semibold text-foreground mb-2">Nenhum freelancer encontrado</h3>
               <p className="text-sm text-muted-foreground">
