@@ -1,16 +1,17 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Sparkles, Users, Briefcase, GraduationCap } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/ui/Logo';
+import { AnimatedIcon } from '@/components/ui/AnimatedIcon';
 
 export default function LandingPage() {
   const navigate = useNavigate();
 
   const features = [
-    { icon: Users, title: 'Conecte-se', desc: 'Com milhares de freelancers' },
-    { icon: Briefcase, title: 'Trabalhe', desc: 'Em projetos diversos' },
-    { icon: GraduationCap, title: 'Cresça', desc: 'Desenvolva suas habilidades' },
+    { icon: 'conecte' as const, title: 'Conecte-se', desc: 'Com milhares de freelancers' },
+    { icon: 'queda' as const, title: 'Trabalhe', desc: 'Em projetos diversos' },
+    { icon: 'cracha' as const, title: 'Cresça', desc: 'Desenvolva suas habilidades' },
   ];
 
   return (
@@ -57,7 +58,7 @@ export default function LandingPage() {
           className="text-center flex-1 flex flex-col justify-center"
         >
           <div className="inline-flex items-center gap-2 mx-auto mb-6 px-4 py-2 rounded-full bg-secondary border border-border">
-            <Sparkles className="w-4 h-4 text-primary" />
+            <AnimatedIcon icon="ideia" size="xs" />
             <span className="text-sm font-medium text-secondary-foreground">
               Plataforma #1 em Angola
             </span>
@@ -86,8 +87,8 @@ export default function LandingPage() {
                 transition={{ delay: 0.6 + i * 0.1 }}
                 className="text-center"
               >
-                <div className="w-12 h-12 mx-auto mb-2 rounded-2xl bg-secondary flex items-center justify-center">
-                  <feature.icon className="w-6 h-6 text-primary" />
+                <div className="w-14 h-14 mx-auto mb-2 rounded-2xl bg-secondary flex items-center justify-center">
+                  <AnimatedIcon icon={feature.icon} size="sm" />
                 </div>
                 <h3 className="text-sm font-semibold text-foreground">{feature.title}</h3>
                 <p className="text-xs text-muted-foreground">{feature.desc}</p>

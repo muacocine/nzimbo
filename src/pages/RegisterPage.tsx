@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Logo } from '@/components/ui/Logo';
 import { StepIndicator } from '@/components/ui/StepIndicator';
 import { PasswordStrengthIndicator } from '@/components/ui/PasswordStrengthIndicator';
+import { AnimatedIcon } from '@/components/ui/AnimatedIcon';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
@@ -27,8 +28,8 @@ const COURSES = [
 ];
 
 const EDUCATION_LEVELS = [
-  { value: 'medio', label: 'Ensino Médio', icon: '🎓' },
-  { value: 'universidade', label: 'Universidade', icon: '🏛️' }
+  { value: 'medio', label: 'Ensino Médio', icon: 'cracha' as const },
+  { value: 'universidade', label: 'Universidade', icon: 'ideia' as const }
 ];
 
 export default function RegisterPage() {
@@ -77,7 +78,6 @@ export default function RegisterPage() {
     if (step < totalSteps - 1) {
       setStep(step + 1);
     } else {
-      // Final step - register
       setLoading(true);
       try {
         const { error } = await signUp(formData.email, formData.password, {
@@ -183,6 +183,9 @@ export default function RegisterPage() {
                 className="space-y-6"
               >
                 <div className="text-center mb-8">
+                  <div className="flex justify-center mb-4">
+                    <AnimatedIcon icon="utilizador" size="xl" />
+                  </div>
                   <h1 className="text-2xl font-display font-bold mb-2">
                     Qual é o seu nome?
                   </h1>
@@ -217,6 +220,9 @@ export default function RegisterPage() {
                 className="space-y-6"
               >
                 <div className="text-center mb-8">
+                  <div className="flex justify-center mb-4">
+                    <AnimatedIcon icon="conecte" size="xl" />
+                  </div>
                   <h1 className="text-2xl font-display font-bold mb-2">
                     Qual é o seu email?
                   </h1>
@@ -252,6 +258,9 @@ export default function RegisterPage() {
                 className="space-y-6"
               >
                 <div className="text-center mb-8">
+                  <div className="flex justify-center mb-4">
+                    <AnimatedIcon icon="ideia" size="xl" />
+                  </div>
                   <h1 className="text-2xl font-display font-bold mb-2">
                     Suas áreas de interesse
                   </h1>
@@ -294,6 +303,9 @@ export default function RegisterPage() {
                 className="space-y-6"
               >
                 <div className="text-center mb-8">
+                  <div className="flex justify-center mb-4">
+                    <AnimatedIcon icon="cracha" size="xl" />
+                  </div>
                   <h1 className="text-2xl font-display font-bold mb-2">
                     Nível de Educação
                   </h1>
@@ -314,7 +326,9 @@ export default function RegisterPage() {
                           : 'border-border hover:border-primary/50'
                       )}
                     >
-                      <span className="text-4xl block mb-2">{level.icon}</span>
+                      <div className="flex justify-center mb-2">
+                        <AnimatedIcon icon={level.icon} size="lg" />
+                      </div>
                       <span className="font-medium text-foreground">{level.label}</span>
                     </button>
                   ))}
@@ -334,6 +348,9 @@ export default function RegisterPage() {
                 className="space-y-6"
               >
                 <div className="text-center mb-8">
+                  <div className="flex justify-center mb-4">
+                    <AnimatedIcon icon="conta" size="xl" />
+                  </div>
                   <h1 className="text-2xl font-display font-bold mb-2">
                     Crie sua senha
                   </h1>

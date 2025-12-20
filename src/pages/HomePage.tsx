@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Search, TrendingUp, Sparkles, Star, MessageCircle } from 'lucide-react';
+import { Search, Star, MessageCircle, TrendingUp } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Logo } from '@/components/ui/Logo';
+import { AnimatedIcon } from '@/components/ui/AnimatedIcon';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
@@ -49,7 +50,6 @@ export default function HomePage() {
 
       if (error) throw error;
 
-      // Fetch profiles separately
       const userIds = [...new Set(servicesData?.map(s => s.user_id) || [])];
       const { data: profilesData } = await supabase
         .from('profiles')
@@ -123,7 +123,7 @@ export default function HomePage() {
             className="mb-8"
           >
             <div className="flex items-center gap-2 mb-4">
-              <Sparkles className="w-5 h-5 text-primary" />
+              <AnimatedIcon icon="ideia" size="sm" />
               <h2 className="text-lg font-display font-semibold">Patrocinados</h2>
             </div>
 
@@ -137,8 +137,8 @@ export default function HomePage() {
                   onClick={() => navigate(`/service/${service.id}`)}
                   className="min-w-[280px] nzimbo-card p-4 cursor-pointer group relative overflow-hidden"
                 >
-                  <div className="absolute top-2 right-2 px-2 py-1 rounded-full nzimbo-gradient text-xs text-primary-foreground font-medium">
-                    <TrendingUp className="w-3 h-3 inline mr-1" />
+                  <div className="absolute top-2 right-2 px-2 py-1 rounded-full nzimbo-gradient text-xs text-primary-foreground font-medium flex items-center gap-1">
+                    <TrendingUp className="w-3 h-3" />
                     Destaque
                   </div>
 
@@ -180,7 +180,10 @@ export default function HomePage() {
 
         {/* Regular Services */}
         <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-          <h2 className="text-lg font-display font-semibold mb-4">Serviços Disponíveis</h2>
+          <div className="flex items-center gap-2 mb-4">
+            <AnimatedIcon icon="queda" size="sm" />
+            <h2 className="text-lg font-display font-semibold">Serviços Disponíveis</h2>
+          </div>
 
           {loading ? (
             <div className="space-y-4">
@@ -243,8 +246,8 @@ export default function HomePage() {
             </div>
           ) : (
             <div className="text-center py-12">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-secondary flex items-center justify-center">
-                <Search className="w-8 h-8 text-muted-foreground" />
+              <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-secondary flex items-center justify-center">
+                <AnimatedIcon icon="ideia" size="lg" />
               </div>
               <h3 className="font-semibold text-foreground mb-2">Nenhum serviço encontrado</h3>
               <p className="text-sm text-muted-foreground">{searchQuery ? 'Tente outra busca' : 'Seja o primeiro a publicar!'}</p>
