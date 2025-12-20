@@ -111,14 +111,17 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
+          badge_type: string | null
           bio: string | null
           courses: string[] | null
+          cover_url: string | null
           created_at: string
           education_level: Database["public"]["Enums"]["education_level"] | null
           email: string
           full_name: string
           id: string
           is_freelancer: boolean | null
+          is_verified: boolean | null
           location: string | null
           phone: string | null
           rating: number | null
@@ -129,8 +132,10 @@ export type Database = {
         }
         Insert: {
           avatar_url?: string | null
+          badge_type?: string | null
           bio?: string | null
           courses?: string[] | null
+          cover_url?: string | null
           created_at?: string
           education_level?:
             | Database["public"]["Enums"]["education_level"]
@@ -139,6 +144,7 @@ export type Database = {
           full_name: string
           id?: string
           is_freelancer?: boolean | null
+          is_verified?: boolean | null
           location?: string | null
           phone?: string | null
           rating?: number | null
@@ -149,8 +155,10 @@ export type Database = {
         }
         Update: {
           avatar_url?: string | null
+          badge_type?: string | null
           bio?: string | null
           courses?: string[] | null
+          cover_url?: string | null
           created_at?: string
           education_level?:
             | Database["public"]["Enums"]["education_level"]
@@ -159,6 +167,7 @@ export type Database = {
           full_name?: string
           id?: string
           is_freelancer?: boolean | null
+          is_verified?: boolean | null
           location?: string | null
           phone?: string | null
           rating?: number | null
@@ -324,6 +333,54 @@ export type Database = {
         Update: {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      verification_requests: {
+        Row: {
+          badge_type: string | null
+          created_at: string
+          document_type: string
+          document_url: string | null
+          full_name: string
+          id: string
+          reason: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          social_links: string[] | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          badge_type?: string | null
+          created_at?: string
+          document_type: string
+          document_url?: string | null
+          full_name: string
+          id?: string
+          reason: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          social_links?: string[] | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          badge_type?: string | null
+          created_at?: string
+          document_type?: string
+          document_url?: string | null
+          full_name?: string
+          id?: string
+          reason?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          social_links?: string[] | null
+          status?: string
+          updated_at?: string
           user_id?: string
         }
         Relationships: []

@@ -1,13 +1,13 @@
 import { motion } from 'framer-motion';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { AnimatedIcon, IconType } from '@/components/ui/AnimatedIcon';
+import { Home, Compass, User, Settings } from 'lucide-react';
 
-const navItems: { icon: IconType; label: string; path: string }[] = [
-  { icon: 'ideia', label: 'Início', path: '/home' },
-  { icon: 'conecte', label: 'Explorar', path: '/explore' },
-  { icon: 'utilizador', label: 'Perfil', path: '/profile' },
-  { icon: 'conta', label: 'Definições', path: '/settings' },
+const navItems = [
+  { icon: Home, label: 'Início', path: '/home' },
+  { icon: Compass, label: 'Explorar', path: '/explore' },
+  { icon: User, label: 'Perfil', path: '/profile' },
+  { icon: Settings, label: 'Definições', path: '/settings' },
 ];
 
 export function FooterNav() {
@@ -24,6 +24,7 @@ export function FooterNav() {
       <div className="flex items-center justify-around py-2 pb-safe">
         {navItems.map((item) => {
           const isActive = location.pathname === item.path;
+          const Icon = item.icon;
           
           return (
             <button
@@ -47,11 +48,9 @@ export function FooterNav() {
                 whileTap={{ scale: 0.9 }}
                 className="relative"
               >
-                <AnimatedIcon 
-                  icon={item.icon} 
-                  size="sm"
+                <Icon 
                   className={cn(
-                    'transition-all duration-300',
+                    'w-6 h-6 transition-all duration-300',
                     isActive && 'scale-110'
                   )}
                 />
