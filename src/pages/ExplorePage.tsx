@@ -4,6 +4,7 @@ import { Search, Star, Code, Palette, GraduationCap, TrendingUp, PenTool, Video,
 import { Input } from '@/components/ui/input';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { AnimatedIcon } from '@/components/ui/AnimatedIcon';
+import { VerifiedBadge } from '@/components/ui/VerifiedBadge';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -30,6 +31,8 @@ interface Profile {
   education_level: string | null;
   rating: number;
   total_reviews: number;
+  is_verified: boolean | null;
+  badge_type: string | null;
 }
 
 export default function ExplorePage() {
@@ -201,8 +204,11 @@ export default function ExplorePage() {
                     )}
                   </div>
 
-                  <h3 className="font-semibold text-foreground mb-1 line-clamp-1 group-hover:text-primary transition-colors">
+                  <h3 className="font-semibold text-foreground mb-1 line-clamp-1 group-hover:text-primary transition-colors flex items-center justify-center gap-1">
                     {freelancer.full_name}
+                    {freelancer.is_verified && freelancer.badge_type && (
+                      <VerifiedBadge type={freelancer.badge_type as 'blue' | 'black'} size="sm" />
+                    )}
                   </h3>
 
                   <div className="flex items-center justify-center gap-1 mb-2">

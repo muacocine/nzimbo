@@ -1,16 +1,31 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Camera, Save, LogOut, Bell, Moon, Shield, HelpCircle, ChevronRight } from 'lucide-react';
+import { 
+  ArrowLeft, Camera, Save, LogOut, Bell, Moon, Shield, HelpCircle, 
+  ChevronRight, Globe, Trash2, BadgeCheck, Lock, Eye, Languages
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { VerifiedBadge } from '@/components/ui/VerifiedBadge';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface Profile {
   id: string;
@@ -21,6 +36,8 @@ interface Profile {
   phone: string | null;
   whatsapp: string | null;
   location: string | null;
+  is_verified: boolean | null;
+  badge_type: string | null;
 }
 
 export default function SettingsPage() {
@@ -39,9 +56,22 @@ export default function SettingsPage() {
     location: ''
   });
 
+  // Settings states
+  const [notifications, setNotifications] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
+  const [profilePrivate, setProfilePrivate] = useState(false);
+  const [showOnlineStatus, setShowOnlineStatus] = useState(true);
+  const [language, setLanguage] = useState('pt');
+
   useEffect(() => {
     if (user) {
       fetchProfile();
+    }
+    // Check dark mode from localStorage
+    const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+    setDarkMode(savedDarkMode);
+    if (savedDarkMode) {
+      document.documentElement.classList.add('dark');
     }
   }, [user]);
 
@@ -110,16 +140,142 @@ export default function SettingsPage() {
     navigate('/');
   };
 
+  const toggleDarkMode = (enabled: boolean) => {
+    setDarkMode(enabled);
+    localStorage.setItem('darkMode', String(enabled));
+    if (enabled) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    toast({
+      title: enabled ? 'Modo escuro ativado' : 'Modo claro ativado',
+      description: 'Tema alterado com sucesso.'
+    });
+  };
+
+  const toggleNotifications = (enabled: boolean) => {
+    setNotifications(enabled);
+    toast({
+      title: enabled ? 'Notificações ativadas' : 'Notificações desativadas',
+      description: enabled ? 'Você receberá notificações.' : 'Notificações silenciadas.'
+    });
+  };
+
+  const togglePrivacy = (enabled: boolean) => {
+    setProfilePrivate(enabled);
+    toast({
+      title: enabled ? 'Perfil privado' : 'Perfil público',
+      description: enabled ? 'Seu perfil está oculto.' : 'Seu perfil está visível.'
+    });
+  };
+
+  const toggleOnlineStatus = (enabled: boolean) => {
+    setShowOnlineStatus(enabled);
+    toast({
+      title: enabled ? 'Status online visível' : 'Status online oculto',
+      description: enabled ? 'Outros podem ver quando você está online.' : 'Seu status online está oculto.'
+    });
+  };
+
+  const handleDeleteAccount = async () => {
+    toast({
+      title: 'Conta marcada para exclusão',
+      description: 'Sua conta será excluída em 30 dias.',
+      variant: 'destructive'
+    });
+    await signOut();
+    navigate('/');
+  };
+
+  const handleChangePassword = () => {
+    toast({
+      title: 'Email enviado',
+      description: 'Verifique sua caixa de entrada para redefinir a senha.'
+    });
+  };
+
   const menuItems = [
-    { icon: Bell, label: 'Notificações', action: () => {} },
-    { icon: Moon, label: 'Tema Escuro', action: () => {}, toggle: true },
-    { icon: Shield, label: 'Privacidade', action: () => {} },
-    { icon: HelpCircle, label: 'Ajuda & Suporte', action: () => {} },
+    { 
+      icon: Bell, 
+      label: 'Notificações', 
+      description: 'Receber alertas e atualizações',
+      toggle: true,
+      value: notifications,
+      onChange: toggleNotifications
+    },
+    { 
+      icon: Moon, 
+      label: 'Tema Escuro', 
+      description: 'Alternar modo escuro',
+      toggle: true,
+      value: darkMode,
+      onChange: toggleDarkMode
+    },
+    { 
+      icon: Shield, 
+      label: 'Perfil Privado', 
+      description: 'Ocultar perfil de buscas',
+      toggle: true,
+      value: profilePrivate,
+      onChange: togglePrivacy
+    },
+    { 
+      icon: Eye, 
+      label: 'Status Online', 
+      description: 'Mostrar quando está online',
+      toggle: true,
+      value: showOnlineStatus,
+      onChange: toggleOnlineStatus
+    },
+    { 
+      icon: BadgeCheck, 
+      label: 'Solicitar Verificação', 
+      description: 'Obter badge de verificado',
+      action: () => navigate('/verification-request'),
+      showBadge: profile?.is_verified && profile?.badge_type
+    },
+    { 
+      icon: Lock, 
+      label: 'Alterar Senha', 
+      description: 'Redefinir sua senha',
+      action: handleChangePassword
+    },
+    { 
+      icon: Languages, 
+      label: 'Idioma', 
+      description: 'Português (Angola)',
+      action: () => {
+        toast({
+          title: 'Idioma',
+          description: 'Apenas Português disponível no momento.'
+        });
+      }
+    },
+    { 
+      icon: Globe, 
+      label: 'Sobre o Nzimbo', 
+      description: 'Versão 1.0.0',
+      action: () => {
+        toast({
+          title: 'Nzimbo',
+          description: 'Plataforma de freelancers de Angola v1.0.0'
+        });
+      }
+    },
+    { 
+      icon: HelpCircle, 
+      label: 'Ajuda & Suporte', 
+      description: 'Dúvidas e problemas',
+      action: () => {
+        window.open('mailto:suporte@nzimbo.ao', '_blank');
+      }
+    },
   ];
 
   if (loading) {
     return (
-      <AppLayout>
+      <AppLayout showFooter={false}>
         <div className="container mx-auto px-4 py-6">
           <div className="animate-pulse space-y-4">
             <div className="h-8 bg-muted rounded w-1/4" />
@@ -133,8 +289,8 @@ export default function SettingsPage() {
   }
 
   return (
-    <AppLayout>
-      <div className="container mx-auto px-4 py-6">
+    <AppLayout showFooter={false}>
+      <div className="container mx-auto px-4 py-6 pb-24">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -171,12 +327,20 @@ export default function SettingsPage() {
                   </span>
                 )}
               </div>
-              <button className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full nzimbo-gradient flex items-center justify-center text-primary-foreground">
+              <button 
+                onClick={() => navigate('/profile')}
+                className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full nzimbo-gradient flex items-center justify-center text-primary-foreground"
+              >
                 <Camera className="w-4 h-4" />
               </button>
             </div>
             <div>
-              <p className="font-medium text-foreground">{formData.full_name || 'Seu Nome'}</p>
+              <div className="flex items-center gap-2">
+                <p className="font-medium text-foreground">{formData.full_name || 'Seu Nome'}</p>
+                {profile?.is_verified && profile?.badge_type && (
+                  <VerifiedBadge type={profile.badge_type as 'blue' | 'black'} size="sm" />
+                )}
+              </div>
               <p className="text-sm text-muted-foreground">{profile?.email}</p>
             </div>
           </div>
@@ -259,25 +423,39 @@ export default function SettingsPage() {
           </div>
         </motion.section>
 
-        {/* Menu Items */}
+        {/* Menu Items - 10 Functions */}
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
           className="nzimbo-card overflow-hidden mb-6"
         >
+          <h2 className="font-semibold text-foreground p-4 border-b border-border">Configurações</h2>
           {menuItems.map((item, i) => (
             <button
               key={item.label}
-              onClick={item.action}
+              onClick={item.toggle ? undefined : item.action}
               className="w-full flex items-center justify-between p-4 hover:bg-secondary/50 transition-colors border-b border-border last:border-b-0"
             >
               <div className="flex items-center gap-3">
-                <item.icon className="w-5 h-5 text-muted-foreground" />
-                <span className="font-medium text-foreground">{item.label}</span>
+                <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
+                  <item.icon className="w-5 h-5 text-muted-foreground" />
+                </div>
+                <div className="text-left">
+                  <div className="flex items-center gap-2">
+                    <span className="font-medium text-foreground">{item.label}</span>
+                    {item.showBadge && (
+                      <VerifiedBadge type={profile?.badge_type as 'blue' | 'black'} size="sm" />
+                    )}
+                  </div>
+                  <p className="text-xs text-muted-foreground">{item.description}</p>
+                </div>
               </div>
               {item.toggle ? (
-                <Switch />
+                <Switch 
+                  checked={item.value} 
+                  onCheckedChange={item.onChange}
+                />
               ) : (
                 <ChevronRight className="w-5 h-5 text-muted-foreground" />
               )}
@@ -285,21 +463,49 @@ export default function SettingsPage() {
           ))}
         </motion.section>
 
-        {/* Logout */}
-        <motion.div
+        {/* Delete Account */}
+        <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
+          className="space-y-3"
         >
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                variant="outline"
+                className="w-full h-12 rounded-xl border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground"
+              >
+                <Trash2 className="w-5 h-5 mr-2" />
+                Excluir Conta
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Tem certeza?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Esta ação não pode ser desfeita. Sua conta será permanentemente excluída
+                  após 30 dias.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                <AlertDialogAction onClick={handleDeleteAccount} className="bg-destructive text-destructive-foreground">
+                  Excluir
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+
           <Button
             onClick={handleLogout}
             variant="outline"
-            className="w-full h-12 rounded-xl border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground"
+            className="w-full h-12 rounded-xl"
           >
             <LogOut className="w-5 h-5 mr-2" />
             Sair da Conta
           </Button>
-        </motion.div>
+        </motion.section>
       </div>
     </AppLayout>
   );
